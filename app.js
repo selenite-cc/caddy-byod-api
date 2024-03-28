@@ -67,6 +67,7 @@ app.post("/add", async (req, res) => {
 										res.status(200).end();
 									}
 								});
+								axios.get(`https://${link}`)
 								return;
 							} else {
 								reason = "The DNS was not set to the right IP.";
