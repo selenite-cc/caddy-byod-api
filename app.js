@@ -51,36 +51,18 @@ app.post("/add", async (req, res) => {
 				console.log("running fetch");
 				let dns = await (await fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${link}`, { headers: { Origin: "https://api-ninjas.com" } })).json();
 				console.log("fetch completed");
-				if (links.indexOf(link) < 0) {
-					if (dns[0]) {
-						console.log("links found");
-						if (dns[0].record_type == "A") {
-							console.log("dns[0] is a record");
-							if (dns[0].value == "5.161.118.69") {
-								console.log("correct domain");
-								links.push(link);
-								fs.writeFile("./domains.json", JSON.stringify(links), (err) => {
-									if (err) {
-										console.error(err);
-										reason = error;
-									} else {
-										res.status(200).end();
-									}
-								});
-								axios.get(`https://${link}`)
-								return;
-							} else {
-								reason = "The DNS was not set to the right IP.";
-							}
-						} else {
-							reason = "Did not detect an A record.";
-						}
+				console.log("correct domain");
+				links.push(link);
+				fs.writeFile("./domains.json", JSON.stringify(links), (err) => {
+					if (err) {
+						console.error(err);
+						reason = error;
 					} else {
-						reason = "No DNS records were found.";
+						res.status(200).end();
 					}
-				} else {
-					reason = "Link has already been added.";
-				}
+				});
+				axios.get(`https://${link}`)
+				return;
 			} else {
 				reason = "Link wasn't detected as a valid link.";
 			}
